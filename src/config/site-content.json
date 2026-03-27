@@ -44,21 +44,21 @@
 		{
 			"id": "github",
 			"type": "github",
-			"value": "https://github.com/yysuni",
+			"value": "https://github.com/example",
 			"label": "Github",
 			"order": 3
 		},
 		{
 			"id": "juejin",
 			"type": "juejin",
-			"value": "https://juejin.cn/user/2427311675422382",
+			"value": "https://juejin.cn/user/example",
 			"label": "稀土掘金",
 			"order": 2
 		},
 		{
 			"id": "email",
 			"type": "email",
-			"value": "yysuni1001@gmail.com",
+			"value": "example@gmail.com",
 			"label": "",
 			"order": 1
 		}
