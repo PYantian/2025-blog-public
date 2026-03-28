@@ -1,7 +1,6 @@
 import '@/styles/globals.css'
 
 import type { Metadata } from 'next'
-//import Layout from '@/layout'		//为了不在登录页面出现这个组件，所以注释掉
 import Layout from '@/layout'
 import Head from '@/layout/head'
 import siteContent from '@/config/site-content.json'
@@ -56,4 +55,4 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 			</body>
 		</html>
 	)
-}  //为了不在登录页面出现这个组件，将 <Layout>{children}</Layout> 改为 {children}
+}
