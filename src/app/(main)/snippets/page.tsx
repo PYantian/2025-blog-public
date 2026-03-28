@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import { Plus, X } from 'lucide-react'
 import { DialogModal } from '@/components/dialog-modal'
 import { useAuthStore } from '@/hooks/use-auth'
-import { useConfigStore } from '@/app/(home)/stores/config-store'
+import { useConfigStore } from '@/app/(main)/(home)/stores/config-store'
 import initialList from './list.json'
 import { pushSnippets } from './services/push-snippets'
 

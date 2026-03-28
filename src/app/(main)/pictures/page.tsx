@@ -8,7 +8,7 @@ import { RandomLayout } from './components/random-layout'
 import UploadDialog from './components/upload-dialog'
 import { pushPictures } from './services/push-pictures'
 import { useAuthStore } from '@/hooks/use-auth'
-import { useConfigStore } from '@/app/(home)/stores/config-store'
+import { useConfigStore } from '@/app/(main)/(home)/stores/config-store'
 import type { ImageItem } from '../projects/components/image-upload-dialog'
 import { useRouter } from 'next/navigation'
 

@@ -21,8 +21,8 @@ import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { cn } from '@/lib/utils'
 import { useSize } from '@/hooks/use-size'
-import { useConfigStore } from '@/app/(home)/stores/config-store'
-import { HomeDraggableLayer } from '@/app/(home)/home-draggable-layer'
+import { useConfigStore } from '@/app/(main)/(home)/stores/config-store'
+import { HomeDraggableLayer } from '@/app/(main)/(home)/home-draggable-layer'
 
 const list = [
 	{

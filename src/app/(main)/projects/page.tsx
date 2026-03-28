@@ -7,7 +7,7 @@ import { ProjectCard, type Project } from './components/project-card'
 import CreateDialog from './components/create-dialog'
 import { pushProjects } from './services/push-projects'
 import { useAuthStore } from '@/hooks/use-auth'
-import { useConfigStore } from '@/app/(home)/stores/config-store'
+import { useConfigStore } from '@/app/(main)/(home)/stores/config-store'
 import initialList from './list.json'
 import type { ImageItem } from './components/image-upload-dialog'
 

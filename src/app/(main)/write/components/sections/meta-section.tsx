@@ -2,7 +2,7 @@ import { motion } from 'motion/react'
 import { useWriteStore } from '../../stores/write-store'
 import { TagInput } from '../ui/tag-input'
 import { useCategories } from '@/hooks/use-categories'
-import { useConfigStore } from '@/app/(home)/stores/config-store'
+import { useConfigStore } from '@/app/(main)/(home)/stores/config-store'
 import { Select } from '@/components/select'
 
 type MetaSectionProps = {
