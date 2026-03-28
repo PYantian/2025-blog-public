@@ -222,5 +222,15 @@
 			"3D"
 		],
 		"stars": 3
+	},
+	{
+		"name": "yysuni个人blog",
+		"logo": "https://www.yysuni.com/favicon.png",
+		"url": "https://www.yysuni.com/",
+		"description": "yysuni的个人博客，可作为个人博客参考",
+		"tags": [
+			"博客"
+		],
+		"stars": 3
 	}
 ]
