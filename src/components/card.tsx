@@ -17,32 +17,48 @@ interface Props {
 }
 
 export default function Card({ children, order, width, height, x, y, className }: Props) {
-	const { maxSM, init } = useSize()
-	let [show, setShow] = useState(false)
-	if (maxSM && init) order = 0
+	const { isPortrait, init } = useSize()
+	const [show, setShow] = useState(false)
+
+	const portraitMode = isPortrait && init
+	const animationOrder = portraitMode ? 0 : order
 
 	useEffect(() => {
 		if (show) return
 		if (x === 0 && y === 0) return
-		setTimeout(
-			() => {
-				setShow(true)
-			},
-			order * ANIMATION_DELAY * 1000
-		)
-	}, [x, y, show])
 
-	if (show)
-		return (
-			<motion.div
-				className={cn('card squircle', className)}
-				initial={{ opacity: 0, scale: 0.6, left: x, top: y, width, height }}
-				animate={{ opacity: 1, scale: 1, left: x, top: y, width, height }}
-				whileHover={{ scale: 1.05 }}
-				whileTap={{ scale: 0.95 }}>
-				{children}
-			</motion.div>
-		)
+		const timer = setTimeout(() => {
+			setShow(true)
+		}, animationOrder * ANIMATION_DELAY * 1000)
 
-	return null
+		return () => clearTimeout(timer)
+	}, [x, y, show, animationOrder])
+
+	if (!show) return null
+
+	return (
+		<motion.div
+			initial={{ opacity: 0, y: 12 }}
+			animate={{ opacity: 1, y: 0 }}
+			className={cn(
+				'card',
+				portraitMode ? 'relative left-auto top-auto mx-auto' : 'card-abs',
+				className
+			)}
+			style={
+				portraitMode
+					? {
+							width: 'min(92vw, 420px)',
+							height: 'auto'
+						}
+					: {
+							width,
+							height,
+							left: x,
+							top: y
+						}
+			}>
+			{children}
+		</motion.div>
+	)
 }
