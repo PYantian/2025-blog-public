@@ -14,7 +14,7 @@ export default function Layout({ children }: PropsWithChildren) {
 	useCenterInit()
 	useSizeInit()
 	const { cardStyles, siteContent, regenerateKey } = useConfigStore()
-	const { maxSM, init } = useSize()
+	const { maxSM, init, isPortrait } = useSize()
 
 	const backgroundImages = (siteContent.backgroundImages ?? []) as Array<{ id: string; url: string }>
 	const currentBackgroundImageId = siteContent.currentBackgroundImageId
@@ -39,6 +39,7 @@ export default function Layout({ children }: PropsWithChildren) {
 					} as React.CSSProperties
 				}
 			/>
+
 			{currentBackgroundImage && (
 				<div
 					className='fixed inset-0 z-0 overflow-hidden'
@@ -50,11 +51,21 @@ export default function Layout({ children }: PropsWithChildren) {
 					}}
 				/>
 			)}
+
 			<BlurredBubblesBackground colors={siteContent.backgroundColors} regenerateKey={regenerateKey} />
 
 			<main className='relative z-10 h-full'>
-				{children}
-				<NavCard />
+				{isPortrait && init ? (
+					<div className='fixed inset-x-0 top-0 z-50 flex justify-center pt-6'>
+						<NavCard />
+					</div>
+				) : (
+					<NavCard />
+				)}
+
+				<div className={isPortrait && init ? 'pt-24' : ''}>
+					{children}
+				</div>
 
 				{!maxSM && cardStyles.musicCard?.enabled !== false && <MusicCard />}
 			</main>
