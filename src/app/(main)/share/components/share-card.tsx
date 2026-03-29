@@ -27,7 +27,7 @@ interface ShareCardProps {
 export function ShareCard({ share, isEditMode = false, onUpdate, onDelete }: ShareCardProps) {
 	const [expanded, setExpanded] = useState(false)
 	const [isEditing, setIsEditing] = useState(false)
-	const { maxSM } = useSize()
+	const { isPortrait } = useSize()
 	const [localShare, setLocalShare] = useState(share)
 	const [showLogoDialog, setShowLogoDialog] = useState(false)
 	const [logoItem, setLogoItem] = useState<LogoItem | null>(null)
@@ -65,7 +65,7 @@ export function ShareCard({ share, isEditMode = false, onUpdate, onDelete }: Sha
 	return (
 		<motion.div
 			initial={{ opacity: 0, scale: 0.6 }}
-			{...(maxSM ? { animate: { opacity: 1, scale: 1 } } : { whileInView: { opacity: 1, scale: 1 } })}
+			{...(isPortrait ? { animate: { opacity: 1, scale: 1 } } : { whileInView: { opacity: 1, scale: 1 } })}
 			className='card relative block overflow-hidden'>
 			{isEditMode && (
 				<div className='absolute top-3 right-3 z-10 flex gap-2'>

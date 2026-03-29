@@ -133,7 +133,7 @@ const FloatingImage = ({
 	onDeleteGroup
 }: FloatingImageProps) => {
 	const { centerX, centerY } = useCenterStore()
-	const { maxSM, init } = useSize()
+	const { isPortrait, init } = useSize()
 	const bodyRef = useRef(document.body)
 	const mouseDownTimeRef = useRef<number | null>(null)
 	const [zIndex, setZIndex] = useState(index)
@@ -226,7 +226,7 @@ const FloatingImage = ({
 						if (duration <= 150) {
 							if (!isZoomed) {
 								setIsZoomed(true)
-							} else if (maxSM) {
+							} else if (isPortrait) {
 								setIsZoomed(false)
 							}
 						}
@@ -269,7 +269,7 @@ const FloatingImage = ({
 								y: 0,
 								width: zoomedSize.width,
 								height: zoomedSize.height,
-								borderWidth: maxSM ? 12 : 24
+								borderWidth: isPortrait ? 12 : 24
 							}
 						: {
 								zIndex,
@@ -322,14 +322,14 @@ const FloatingImage = ({
 			{isZoomed && description && (
 				<motion.div
 					drag
-					dragConstraints={maxSM ? undefined : bodyRef}
+					dragConstraints={isPortrait ? undefined : bodyRef}
 					dragMomentum={false}
 					className='fixed min-h-[150px] w-[200px] cursor-pointer p-6 shadow'
 					style={{
 						backgroundColor: siteContent.backgroundColors[groupIndex % siteContent.backgroundColors.length],
 						zIndex: TOP_Z_INDEX + 1,
-						right: maxSM ? 12 : centerX / 3,
-						top: maxSM ? 12 : centerY
+						right: isPortrait ? 12 : centerX / 3,
+						top: isPortrait ? 12 : centerY
 					}}
 					initial={{ opacity: 0, scale: 0.4 }}
 					animate={{ opacity: 1, scale: 1 }}>

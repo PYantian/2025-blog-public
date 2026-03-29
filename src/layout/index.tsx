@@ -14,7 +14,7 @@ export default function Layout({ children }: PropsWithChildren) {
 	useCenterInit()
 	useSizeInit()
 	const { cardStyles, siteContent, regenerateKey } = useConfigStore()
-	const { maxSM, init } = useSize()
+	const { isPortrait, init } = useSize()
 
 	const backgroundImages = (siteContent.backgroundImages ?? []) as Array<{ id: string; url: string }>
 	const currentBackgroundImageId = siteContent.currentBackgroundImageId
@@ -56,10 +56,10 @@ export default function Layout({ children }: PropsWithChildren) {
 				{children}
 				<NavCard />
 
-				{!maxSM && cardStyles.musicCard?.enabled !== false && <MusicCard />}
+				{!isPortrait && cardStyles.musicCard?.enabled !== false && <MusicCard />}
 			</main>
 
-			{maxSM && init && <ScrollTopButton className='bg-brand/20 fixed right-6 bottom-8 z-50 shadow-md' />}
+			{isPortrait && init && <ScrollTopButton className='bg-brand/20 fixed right-6 bottom-8 z-50 shadow-md' />}
 		</>
 	)
 }

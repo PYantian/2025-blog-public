@@ -18,7 +18,7 @@ type BlogPreviewProps = {
 }
 
 export function BlogPreview({ markdown, title, tags, date, summary, cover, slug }: BlogPreviewProps) {
-	const { maxSM: isMobile } = useSize()
+	const { isPortrait: isMobile } = useSize()
 	const { content, toc, loading } = useMarkdownRender(markdown)
 	const { siteContent } = useConfigStore()
 	const summaryInContent = siteContent.summaryInContent ?? false

@@ -27,7 +27,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, isEditMode = false, onUpdate, onDelete }: ProjectCardProps) {
 	const [isEditing, setIsEditing] = useState(false)
-	const { maxSM } = useSize()
+	const { isPortrait } = useSize()
 	const [localProject, setLocalProject] = useState(project)
 	const [showImageDialog, setShowImageDialog] = useState(false)
 	const [imageItem, setImageItem] = useState<ImageItem | null>(null)
@@ -65,7 +65,7 @@ export function ProjectCard({ project, isEditMode = false, onUpdate, onDelete }:
 	return (
 		<motion.div
 			initial={{ opacity: 0, scale: 0.9 }}
-			{...(maxSM ? { animate: { opacity: 1, scale: 1 } } : { whileInView: { opacity: 1, scale: 1 } })}
+			{...(isPortrait ? { animate: { opacity: 1, scale: 1 } } : { whileInView: { opacity: 1, scale: 1 } })}
 			className='card relative flex flex-col gap-4'>
 			{isEditMode && (
 				<div className='absolute top-3 right-3 z-10 flex gap-2'>
