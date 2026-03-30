@@ -1,78 +1,77 @@
-'use client'
+import { useCenterStore } from '@/hooks/use-center'
+import Card from '@/components/card'
+import { useConfigStore } from './stores/config-store'
+import { HomeDraggableLayer } from './home-draggable-layer'
+import Link from 'next/link'
+import { useHomeLayoutMode } from './utils/home-layout-mode'
+import { resolveHomeCardFrame } from './utils/resolve-home-card-frame'
 
-import { create } from 'zustand'
-import { useConfigStore, type CardStyles } from './config-store'
+function getGreeting() {
+  const hour = new Date().getHours()
 
-type CardKey = keyof CardStyles
-
-interface LayoutEditState {
-	editing: boolean
-	snapshot: CardStyles | null
-	startEditing: () => void
-	cancelEditing: () => void
-	saveEditing: () => void
-	setOffset: (key: CardKey, offsetX: number | null, offsetY: number | null) => void
-	setSize: (key: CardKey, width: number | undefined, height: number | undefined) => void
+  if (hour >= 6 && hour < 12) return 'Good Morning'
+  if (hour >= 12 && hour < 18) return 'Good Afternoon'
+  if (hour >= 18 && hour < 22) return 'Good Evening'
+  return 'Good Night'
 }
 
-export const useLayoutEditStore = create<LayoutEditState>((set, get) => ({
-	editing: false,
-	snapshot: null,
-	startEditing: () => {
-		const { cardStyles } = useConfigStore.getState()
-		set({
-			editing: true,
-			snapshot: { ...cardStyles }
-		})
-	},
-	cancelEditing: () => {
-		const { snapshot } = get()
-		if (!snapshot) {
-			set({ editing: false, snapshot: null })
-			return
-		}
+export default function HiCard() {
+  const center = useCenterStore()
+  const { cardStyles, siteContent } = useConfigStore()
+  const mode = useHomeLayoutMode()
 
-		const { setCardStyles } = useConfigStore.getState()
-		setCardStyles(snapshot)
+  const greeting = getGreeting()
+  const styles = resolveHomeCardFrame(cardStyles, 'hiCard', mode)
+  const username = siteContent.meta.username || 'Suni'
 
-		set({
-			editing: false,
-			snapshot: null
-		})
-	},
-	saveEditing: () => {
-		set({
-			editing: false,
-			snapshot: null
-		})
-	},
-	setOffset: (key, offsetX, offsetY) => {
-		const { cardStyles, setCardStyles } = useConfigStore.getState()
+  const x = center.x + (styles.offsetX ?? -(styles.width / 2))
+  const y = center.y + (styles.offsetY ?? -(styles.height / 2))
 
-		const next: CardStyles = {
-			...cardStyles,
-			[key]: {
-				...cardStyles[key],
-				offsetX,
-				offsetY
-			}
-		}
+  return (
+    <HomeDraggableLayer
+      cardKey='hiCard'
+      defaultX={x}
+      defaultY={y}
+      width={styles.width}
+      height={styles.height}
+    >
+      <Card x={x} y={y} width={styles.width} height={styles.height} order={styles.order}>
+        {siteContent.enableChristmas && (
+          <>
+            <img
+              src='/images/christmas-3.webp'
+              alt='Christmas decoration'
+              className='pointer-events-none absolute -top-18 -right-18 z-10 size-32 rotate-12 select-none'
+            />
+            <img
+              src='/images/christmas-4.webp'
+              alt='Christmas decoration'
+              className='pointer-events-none absolute -right-3 -bottom-3 z-10 size-20 select-none'
+            />
+          </>
+        )}
 
-		setCardStyles(next)
-	},
-	setSize: (key, width, height) => {
-		const { cardStyles, setCardStyles } = useConfigStore.getState()
+        <div className='flex h-full flex-col justify-between p-7'>
+          <div>
+            <h1 className='text-3xl font-semibold leading-tight'>{greeting}</h1>
+            <p className='mt-3 text-2xl leading-tight text-muted-foreground'>
+              I&apos;m <span className='text-foreground'>{username}</span>, Nice to meet you!
+            </p>
+          </div>
 
-		const next: CardStyles = {
-			...cardStyles,
-			[key]: {
-				...cardStyles[key],
-				width,
-				height
-			}
-		}
+          <div className='flex items-center justify-between'>
+            <Link href='/about' className='brand-btn'>
+              About me
+            </Link>
 
-		setCardStyles(next)
-	}
-}))
-
+            <img
+              src='/images/avatar.webp'
+              alt='avatar'
+              className='size-16 rounded-full object-cover'
+            />
+          </div>
+        </div>
+      </Card>
+    </HomeDraggableLayer>
+  )
+}
