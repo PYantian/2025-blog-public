@@ -2,106 +2,77 @@
 
 import { create } from 'zustand'
 import { useConfigStore, type CardStyles } from './config-store'
-import type { HomeLayoutMode } from '../utils/home-layout-mode'
-import type { LayoutBucket } from '../utils/resolve-home-card-frame'
 
 type CardKey = keyof CardStyles
 
-type EditableMode = Exclude<HomeLayoutMode, 'portrait'>
-
-const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value))
-
-function modeToBucket(mode: EditableMode): LayoutBucket {
-  if (mode === 'mobileLandscape') return 'mobileLandscape'
-  if (mode === 'tabletLandscape') return 'tabletLandscape'
-  return 'desktop'
-}
-
 interface LayoutEditState {
-  editing: boolean
-  snapshot: CardStyles | null
-  mode: EditableMode
-  setMode: (mode: EditableMode) => void
-  startEditing: (mode: EditableMode) => void
-  cancelEditing: () => void
-  saveEditing: () => void
-  setOffset: (key: CardKey, offsetX: number | null, offsetY: number | null) => void
-  setSize: (key: CardKey, width: number | undefined, height: number | undefined) => void
+	editing: boolean
+	snapshot: CardStyles | null
+	startEditing: () => void
+	cancelEditing: () => void
+	saveEditing: () => void
+	setOffset: (key: CardKey, offsetX: number | null, offsetY: number | null) => void
+	setSize: (key: CardKey, width: number | undefined, height: number | undefined) => void
 }
 
 export const useLayoutEditStore = create<LayoutEditState>((set, get) => ({
-  editing: false,
-  snapshot: null,
-  mode: 'desktop',
+	editing: false,
+	snapshot: null,
+	startEditing: () => {
+		const { cardStyles } = useConfigStore.getState()
+		set({
+			editing: true,
+			snapshot: { ...cardStyles }
+		})
+	},
+	cancelEditing: () => {
+		const { snapshot } = get()
+		if (!snapshot) {
+			set({ editing: false, snapshot: null })
+			return
+		}
 
-  setMode: mode => set({ mode }),
+		const { setCardStyles } = useConfigStore.getState()
+		setCardStyles(snapshot)
 
-  startEditing: mode => {
-    const { cardStyles } = useConfigStore.getState()
-    set({
-      editing: true,
-      mode,
-      snapshot: clone(cardStyles)
-    })
-  },
+		set({
+			editing: false,
+			snapshot: null
+		})
+	},
+	saveEditing: () => {
+		set({
+			editing: false,
+			snapshot: null
+		})
+	},
+	setOffset: (key, offsetX, offsetY) => {
+		const { cardStyles, setCardStyles } = useConfigStore.getState()
 
-  cancelEditing: () => {
-    const { snapshot } = get()
+		const next: CardStyles = {
+			...cardStyles,
+			[key]: {
+				...cardStyles[key],
+				offsetX,
+				offsetY
+			}
+		}
 
-    if (!snapshot) {
-      set({ editing: false, snapshot: null })
-      return
-    }
+		setCardStyles(next)
+	},
+	setSize: (key, width, height) => {
+		const { cardStyles, setCardStyles } = useConfigStore.getState()
 
-    useConfigStore.getState().setCardStyles(snapshot)
-    set({ editing: false, snapshot: null })
-  },
+		const next: CardStyles = {
+			...cardStyles,
+			[key]: {
+				...cardStyles[key],
+				width,
+				height
+			}
+		}
 
-  saveEditing: () => {
-    set({ editing: false, snapshot: null })
-  },
-
-  setOffset: (key, offsetX, offsetY) => {
-    const { cardStyles, setCardStyles } = useConfigStore.getState()
-    const { mode } = get()
-    const bucket = modeToBucket(mode)
-
-    const current = cardStyles[key] as any
-
-    const next: CardStyles = {
-      ...cardStyles,
-      [key]: {
-        ...current,
-        [bucket]: {
-          ...current[bucket],
-          offsetX,
-          offsetY
-        }
-      }
-    }
-
-    setCardStyles(next)
-  },
-
-  setSize: (key, width, height) => {
-    const { cardStyles, setCardStyles } = useConfigStore.getState()
-    const { mode } = get()
-    const bucket = modeToBucket(mode)
-
-    const current = cardStyles[key] as any
-
-    const next: CardStyles = {
-      ...cardStyles,
-      [key]: {
-        ...current,
-        [bucket]: {
-          ...current[bucket],
-          width: width ?? current[bucket].width,
-          height: height ?? current[bucket].height
-        }
-      }
-    }
-
-    setCardStyles(next)
-  }
+		setCardStyles(next)
+	}
 }))
+
