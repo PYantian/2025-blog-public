@@ -8,14 +8,14 @@ import GitHub from "next-auth/providers/github";
 const GITHUB_TOKEN_CACHE_KEY = 'github_token'
 const GITHUB_PEM_CACHE_KEY = 'p_info'
 
-function getAllowedGitHubIds() {
-  return (process.env.AUTH_GITHUB_ALLOWED_IDS ?? "")
+function getAllowedGitHubUsers() {
+  return (process.env.AUTH_GITHUB_ALLOWED_USERS ?? "")
     .split(",")
-    .map((item) => item.trim())
+    .map((item) => item.trim().toLowerCase())
     .filter(Boolean);
 }
 
-const allowedGitHubIds = getAllowedGitHubIds();
+const allowedGitHubUsers = getAllowedGitHubUsers();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
@@ -44,14 +44,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account?.provider !== "github") return false;
       if (!profile) return false;
 
-      const githubId =
-  		typeof (profile as { id?: unknown }).id === "number"
-    		? String((profile as { id: number }).id)
-    		: "";
+      const githubLogin =
+        typeof (profile as { login?: unknown }).login === "string"
+          ? (profile as { login: string }).login.toLowerCase()
+          : "";
 
-		if (!githubId) return false;
+      if (!githubLogin) return false;
 
-		return allowedGitHubIds.includes(githubId);
+      return allowedGitHubUsers.includes(githubLogin);
     },
 
     async jwt({ token, user, profile }) {
