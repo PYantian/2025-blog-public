@@ -232,5 +232,15 @@
 			"博客"
 		],
 		"stars": 3
+	},
+	{
+		"name": "蓝桥杯历年真题",
+		"logo": "https://www.dotcpp.com/oj/template/bs3/img/Dotcpp.png",
+		"url": "https://www.dotcpp.com/oj/lanqiao/",
+		"description": "蓝桥杯历年真题",
+		"tags": [
+			"TYP"
+		],
+		"stars": 3
 	}
 ]
